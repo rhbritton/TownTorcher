@@ -1,0 +1,20 @@
+{
+	  "1": {
+		  "id": 1
+		, "name": "Lonely Farmlands I"
+		, "stage": "Lonely Farmlands"
+		, "start": {
+			  "x": "500"
+			, "y": "500"
+		}
+	}
+	, "2": {
+		  "id": 2
+		, "name": "Lonely Farmlands II"
+		, "stage": "Lonely Farmlands"
+		, "start": {
+			  "x": "100"
+			, "y": "50"
+		}
+	}
+}

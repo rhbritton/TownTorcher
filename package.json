@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "jsx-loader": "~0.12.1",
+    "react": "~0.12.1",
+    "stylus-loader": "~0.4.0",
+    "style-loader": "~0.8.2",
+    "css-loader": "~0.9.0",
+    "json-loader": "~0.5.1",
+    "react-hammerjs": "~0.1.1"
+  }
+}
