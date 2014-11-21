@@ -12,9 +12,17 @@ module.exports = React.createClass({
 
 	  	this.dragon_width = 50
 	  	this.dragon_height = 50
-	  	this.dragon_speed = 3
-	  	this.momentum = { x: 0, y: 0 }
-	  	this.momentum_reduction = 0.25
+
+	  	this.max_acceleration = 0.5
+	  	this.terminal_velocity = 5
+	  	this.friction = 0.035
+
+	  	this.dragon_velocity = { x: 0, y: 0 }
+	  	this.dragon_acceleration = { x: 0, y: 0 }
+
+
+	  	// this.momentum = { x: 0, y: 0 }
+	  	// this.momentum_reduction = 0.25
 
 	  	this.x = parseInt(this.props.level.start.x)
 	  	this.y = parseInt(this.props.level.start.y)
@@ -23,8 +31,7 @@ module.exports = React.createClass({
 	  	this.background.src = '/src/static/levels/'+this.props.level.id+'/'+this.props.level.id+'.png'
 
 	  	this.dragon = new Image()
-	  	this.dragon.src = '/src/static/levels/'+this.props.level.id+'/'+this.props.level.id+'.png'
-
+	  	this.dragon.src = '/src/static/game/dragon/up.png'
 
 	  	this.background.onload = function() {
 	  		window.requestAnimationFrame(self.canvasRender)
@@ -44,10 +51,11 @@ module.exports = React.createClass({
 		this.canvas.width = window.innerWidth
 		this.canvas.height = window.innerHeight
 
-		this.changeMomentum()
+		this.implementFriction()
+		this.calculateVelocity()
 
-		this.x = this.x+this.momentum.x
-		this.y = this.y+this.momentum.y
+		this.x = this.x+this.dragon_velocity.x
+		this.y = this.y+this.dragon_velocity.y
 
 		var background_x = dragon_x+(this.dragon_width/2)-this.x
 		  , background_y = dragon_y+(this.dragon_height/2)-this.y
@@ -57,60 +65,82 @@ module.exports = React.createClass({
 
 		
 	}
-	, changeMomentum: function() {
-		console.log(this.momentum)
-		if(this.momentum.x > 0) {
-			if(this.momentum.x < this.momentum_reduction) {
-				this.momentum.x = 0
-			} else {
-				this.momentum.x -= this.momentum_reduction
-			}
-		} else if(this.momentum.x < 0) {
-			if(this.momentum.x > -this.momentum_reduction) {
-				this.momentum.x = 0
-			} else {
-				this.momentum.x += this.momentum_reduction
-			}
+	, calculateVelocity: function() {
+		var new_velocity_x = this.dragon_velocity.x + this.dragon_acceleration.x
+
+		if(new_velocity_x > 0 && new_velocity_x > this.terminal_velocity) {
+			this.dragon_velocity.x = this.terminal_velocity
+		} else if(new_velocity_x < 0 && new_velocity_x < -this.terminal_velocity) {
+			this.dragon_velocity.x = -this.terminal_velocity
 		} else {
-			this.momentum.x = 0
+			this.dragon_velocity.x = new_velocity_x
 		}
 
-		if(this.momentum.y > 0) {
-			if(this.momentum.y < this.momentum_reduction) {
-				this.momentum.y = 0
-			} else {
-				this.momentum.y -= this.momentum_reduction
-			}
-		} else if(this.momentum.y < 0) {
-			if(this.momentum.y > -this.momentum_reduction) {
-				this.momentum.y = 0
-			} else {
-				this.momentum.y += this.momentum_reduction
-			}
+		var new_velocity_y = this.dragon_velocity.y + this.dragon_acceleration.y
+
+		if(new_velocity_y > 0 && new_velocity_y > this.terminal_velocity) {
+			this.dragon_velocity.y = this.terminal_velocity
+		} else if(new_velocity_y < 0 && new_velocity_y < -this.terminal_velocity) {
+			this.dragon_velocity.y = -this.terminal_velocity
 		} else {
-			this.momentum.y = 0
+			this.dragon_velocity.y = new_velocity_y
 		}
 	}
-	, moveDragon: function(e) {
-		console.log(e)
-		var max_velocity = 3
+	, implementFriction: function() {
 
-		if(e.velocityX < -max_velocity)
-			e.velocityX = -max_velocity
-		else if(e.velocityX > max_velocity)
-			e.velocityX = max_velocity
+		if(this.dragon_acceleration.x > 0 && this.dragon_acceleration.x >= this.friction) {
+			this.dragon_acceleration.x -= this.friction
+		} else if(this.dragon_acceleration.x < 0 && this.dragon_acceleration.x <= -this.friction) {
+			this.dragon_acceleration.x += this.friction
+		} else {
+			this.dragon_acceleration.x = 0
+		}
 
-		if(e.velocityY < -max_velocity)
-			e.velocityY = -max_velocity
-		else if(e.velocityY > max_velocity)
-			e.velocityY = max_velocity
+		if(!this.dragon_acceleration.x) {
+			if(this.dragon_velocity.x > 0 && this.dragon_velocity.x >= this.friction) {
+				this.dragon_velocity.x -= this.friction
+			} else if(this.dragon_velocity.x < 0 && this.dragon_velocity.x <= -this.friction) {
+				this.dragon_velocity.x += this.friction
+			} else {
+				this.dragon_velocity.x = 0
+			}
+		}
 
-		this.momentum.x = -e.velocityX*this.dragon_speed
-		this.momentum.y = -e.velocityY*this.dragon_speed
+		if(this.dragon_acceleration.y > 0 && this.dragon_acceleration.y >= this.friction) {
+			this.dragon_acceleration.y -= this.friction
+		} else if(this.dragon_acceleration.y < 0 && this.dragon_acceleration.y <= -this.friction) {
+			this.dragon_acceleration.y += this.friction
+		} else {
+			this.dragon_acceleration.y = 0
+		}
+
+		if(!this.dragon_acceleration.y) {
+			if(this.dragon_velocity.y > 0 && this.dragon_velocity.y >= this.friction) {
+				this.dragon_velocity.y -= this.friction
+			} else if(this.dragon_velocity.y < 0 && this.dragon_velocity.y <= -this.friction) {
+				this.dragon_velocity.y += this.friction
+			} else {
+				this.dragon_velocity.y = 0
+			}
+		}
+	}
+	, accelerateDragon: function(e) {
+		if(e.velocityX < this.max_acceleration)
+			e.velocityX = this.max_acceleration
+		else if(e.velocityX > -this.max_acceleration)
+			e.velocityX = -this.max_acceleration
+
+		if(e.velocityY < -this.max_acceleration)
+			e.velocityY = this.max_acceleration
+		else if(e.velocityY > this.max_acceleration)
+			e.velocityY = -this.max_acceleration
+
+		this.dragon_acceleration.x = e.velocityX
+		this.dragon_acceleration.y = e.velocityY
 	}
 	, render: function() {
 		return (
-			<Hammer onSwipe={this.moveDragon}>
+			<Hammer onSwipe={this.accelerateDragon}>
 				<canvas id="canvas"></canvas>
 			</Hammer>
 		)
