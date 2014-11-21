@@ -14,6 +14,10 @@ module.exports = React.createClass({
 	  	this.canvas = this.getDOMNode().querySelector('#canvas')
 	  	this.ctx = this.canvas.getContext("2d")
 
+	  	this.angle = 0
+
+		this.scale = 1
+
 	  	this.dragon_width = 50
 	  	this.dragon_height = 50
 
@@ -34,8 +38,12 @@ module.exports = React.createClass({
 	  	this.background = new Image()
 	  	this.background.src = '/src/static/levels/'+this.props.level.id+'/'+this.props.level.id+'.png'
 
-	  	this.dragon = new Image()
-	  	this.dragon.src = '/src/static/game/dragon/up.png'
+	  	this.dragon = {
+	  		up: new Image(),
+	  		down: new Image()
+	  	}
+	  	this.dragon.up.src = '/src/static/game/dragon/up.png'
+	  	this.dragon.down.src = '/src/static/game/dragon/down.png'
 	  	remaining++
 
 	  	this.props.level.enemies.forEach(function(enemy, i) {
@@ -55,6 +63,15 @@ module.exports = React.createClass({
 	  			window.requestAnimationFrame(self.canvasRender)
 	  		}
 	  	}
+
+	  	window.onresize = this.setDimensions.bind(this)
+	  	this.setDimensions()
+	}
+	, setDimensions: function() {
+		this.width = window.innerWidth
+  		this.height = window.innerHeight
+  		this.canvas.width = window.innerWidth*this.scale
+  		this.canvas.height = window.innerHeight*this.scale
 	}
 	, componentWillUnmount: function() {
 		this.unmounting = true
@@ -64,8 +81,8 @@ module.exports = React.createClass({
 
 		window.requestAnimationFrame(this.canvasRender)
 
-		this.canvas.width = window.innerWidth
-		this.canvas.height = window.innerHeight
+		this.ctx.clearRect(0, 0, this.width, this.height)
+		this.ctx.scale(this.scale, this.scale)
 
 		this.implementFriction()
 		this.calculateVelocity()
@@ -74,26 +91,37 @@ module.exports = React.createClass({
 		this.y = this.y+this.dragon_velocity.y
 
 		this.drawLevel()
+
+		this.ctx.scale(1/this.scale, 1/this.scale)
 		
 	}
 	, drawLevel: function() {
 		var self = this
-		  , dragon_x = self.canvas.width/2-(self.dragon_width/2)
-		  , dragon_y = self.canvas.height/2-(self.dragon_height/2)
+		  , dragon_x = self.width/2-(self.dragon_width/2)
+		  , dragon_y = self.height/2-(self.dragon_height/2)
 		  , background_x = dragon_x+(self.dragon_width/2)-self.x
 		  , background_y = dragon_y+(self.dragon_height/2)-self.y
 
-		self.ctx.drawImage(self.background, background_x, background_y, self.background.naturalWidth, self.background.naturalHeight)
+		this.ctx.translate( background_x, background_y )
+
+		self.ctx.drawImage(self.background, 0, 0, self.background.naturalWidth, self.background.naturalHeight)
 
 		self.props.level.enemies.forEach(function(enemy, i) {
-			var enemy_x = background_x + enemy.x
-			  , enemy_y = background_y + enemy.y
+			var enemy_x = enemy.x
+			  , enemy_y = enemy.y
 			  , enemy_height = (enemy.data.img.naturalHeight/enemy.data.img.naturalWidth)*enemy.width
 			
 			self.ctx.drawImage(enemy.data.img, enemy_x, enemy_y, enemy.width, enemy_height)
 	  	})
+		
+		this.ctx.translate( -background_x, -background_y )
 
-		self.ctx.drawImage(self.dragon, dragon_x, dragon_y, self.dragon_width, self.dragon_height)
+		self.ctx.save()
+		self.ctx.translate(self.width/2, self.height/2)
+		self.ctx.rotate(this.angle)
+		self.ctx.translate(-self.width/2, -self.height/2)
+		self.ctx.drawImage(Math.random() < 0.5 ? self.dragon.up : self.dragon.down, dragon_x, dragon_y, self.dragon_width, self.dragon_height)
+		self.ctx.restore()
 	}
 	, calculateVelocity: function() {
 		var new_velocity_x = this.dragon_velocity.x + this.dragon_acceleration.x
@@ -155,17 +183,21 @@ module.exports = React.createClass({
 		}
 	}
 	, accelerateDragon: function(e) {
+		var origin_velocityX = this.dragon_velocity.x
+		  , origin_velocityY = this.dragon_velocity.y
+		  , dragon_x = this.width/2-(this.dragon_width/2)
+		  , dragon_y = this.height/2-(this.dragon_height/2)
+		  , radians = (e.angle+90)*Math.PI/180
 
+		this.angle = radians
 		this.friction = this.absolute_friction
 
 		this.dragon_velocity.x = 0
 		this.dragon_velocity.y = 0
 
-		this.turnDragon(e.angle)
-
 		var is_x_larger = Math.abs(e.velocityX) > Math.abs(e.velocityY)
-		  , original_velocityX = e.velocityX
-		  , original_velocityY = e.velocityY
+		  , original_accelerationX = e.velocityX
+		  , original_accelerationY = e.velocityY
 
 		if(e.velocityX < this.max_acceleration)
 			e.velocityX = this.max_acceleration
@@ -178,24 +210,13 @@ module.exports = React.createClass({
 			e.velocityY = -this.max_acceleration
 
 		if(is_x_larger==true) {
-			e.velocityY = (original_velocityY/original_velocityX)*e.velocityX
+			e.velocityY = (original_accelerationY/original_accelerationX)*e.velocityX
 		} else {
-			e.velocityX = (original_velocityX/original_velocityY)*e.velocityY
+			e.velocityX = (original_accelerationX/original_accelerationY)*e.velocityY
 		}
 
 		this.dragon_acceleration.x = e.velocityX
 		this.dragon_acceleration.y = e.velocityY
-	}
-	, turnDragon: function(angle) {
-		if(angle < 45 && angle > -45) {
-			this.dragon.src = '/src/static/game/dragon/down.png'
-		} else if(angle < 135 && angle > 45) {
-			this.dragon.src = '/src/static/game/dragon/up.png'
-		} else if(angle > 135 && angle < -135) {
-			this.dragon.src = '/src/static/game/dragon/face.png'
-		} else if(angle > -135 && angle < -45) {
-			this.dragon.src = '/src/static/game/dragon/left.png'
-		}
 	}
 	, increaseFriction: function(e) {
 		this.friction = this.absolute_friction*this.braking
