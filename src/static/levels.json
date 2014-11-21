@@ -7,6 +7,19 @@
 			  "x": "500"
 			, "y": "500"
 		}
+		, "enemies": [
+			{
+				  "id": "1"
+				, "x": 200
+				, "y": 200
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": "1"
+				, "hp": "2"
+				, "data": {}
+			}
+		]
 	}
 	, "2": {
 		  "id": 2
@@ -16,5 +29,6 @@
 			  "x": "100"
 			, "y": "50"
 		}
+		, "enemies": []
 	}
 }
