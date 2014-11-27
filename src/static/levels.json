@@ -10,6 +10,7 @@
 		, "enemies": [
 			{
 				  "id": "1"
+				, "name": "Lonely Farmer"
 				, "x": 200
 				, "y": 200
 				, "width": 55

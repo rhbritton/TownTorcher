@@ -26,7 +26,10 @@ module.exports = React.createClass({
 	  	this.sensitivity = 10
 	  	this.absolute_friction = 0.01
 	  	this.braking = 10
-
+	  	this.flap_speed = 30
+	  	this.frame = 0
+	  	this.selected = null
+	  	
 
 	  	this.friction = this.absolute_friction
 	  	this.dragon_velocity = { x: 0, y: 0 }
@@ -51,6 +54,8 @@ module.exports = React.createClass({
 	  		self.props.level.enemies[i].data.img = new Image()
 	  		self.props.level.enemies[i].data.img.src = enemy.img
 
+	  		self.props.level.enemies[i].current_hp = self.props.level.enemies[i].hp
+
 	  		self.props.level.enemies[i].data.img.onload = function() {
 		  		if(!--remaining) {
 		  			window.requestAnimationFrame(self.canvasRender)
@@ -65,6 +70,7 @@ module.exports = React.createClass({
 	  	}
 
 	  	window.onresize = this.setDimensions.bind(this)
+
 	  	this.setDimensions()
 	}
 	, setDimensions: function() {
@@ -72,12 +78,33 @@ module.exports = React.createClass({
   		this.height = window.innerHeight
   		this.canvas.width = window.innerWidth*this.scale
   		this.canvas.height = window.innerHeight*this.scale
+
+  		this.selectHub = {
+	  		  width: this.width
+	  		, height: 75
+	  		, x: 0
+	  	}
+  		this.vertical_view = this.canvas.height < this.selectHub.height*4
+
+  		
+	  	if(this.vertical_view) {
+	  		this.selectHub = {
+		  		  width: 100
+		  		, height: this.canvas.height
+		  		, x: 0
+		  		, y: 0
+		  	}
+	  	} else {
+	  		this.selectHub.y = this.canvas.height - this.selectHub.height
+		}
 	}
 	, componentWillUnmount: function() {
 		this.unmounting = true
 	}
 	, canvasRender: function() {
 		if(this.unmounting) return
+
+		this.frame++
 
 		window.requestAnimationFrame(this.canvasRender)
 
@@ -91,6 +118,8 @@ module.exports = React.createClass({
 		this.y = this.y+this.dragon_velocity.y
 
 		this.drawLevel()
+		if(this.selected)
+			this.drawSelected()
 
 		this.ctx.scale(1/this.scale, 1/this.scale)
 		
@@ -120,8 +149,39 @@ module.exports = React.createClass({
 		self.ctx.translate(self.width/2, self.height/2)
 		self.ctx.rotate(this.angle)
 		self.ctx.translate(-self.width/2, -self.height/2)
-		self.ctx.drawImage(Math.random() < 0.5 ? self.dragon.up : self.dragon.down, dragon_x, dragon_y, self.dragon_width, self.dragon_height)
+
+
+		if(Math.floor(self.frame/self.flap_speed) % 2 == 1) 
+			self.ctx.drawImage(self.dragon.up, dragon_x, dragon_y, self.dragon_width, self.dragon_height)
+		else
+			self.ctx.drawImage(self.dragon.down, dragon_x, dragon_y, self.dragon_width, self.dragon_height)
+
 		self.ctx.restore()
+	}
+	, drawSelected: function() {
+		console.log(this.selected)
+		this.ctx.fillStyle = 'white'
+		this.ctx.fillRect(this.selectHub.x, this.selectHub.y, this.selectHub.width, this.selectHub.height)
+		this.ctx.fillStyle = 'black'
+		this.ctx.font = '18px Calibri'
+		this.ctx.lineWidth = '15'
+		this.ctx.fillText(this.selected.name, this.selectHub.x+20, this.selectHub.y+20)
+
+		this.ctx.font = '15px Calibri'
+		this.ctx.lineWidth = '10'
+		
+		if(this.vertical_view) {
+			this.ctx.fillText(this.selected.current_hp+'/'+this.selected.hp, this.selectHub.x+20, this.selectHub.y+50)
+			
+			this.ctx.fillStyle = 'green'
+			this.ctx.fillRect(this.selectHub.x+20, this.selectHub.y+60, 20, (this.selected.current_hp/this.selected.hp)*this.selectHub.height-75)
+		} else {
+			this.ctx.fillText('Hp:  ' + this.selected.current_hp+'/'+this.selected.hp, this.selectHub.x+20, this.selectHub.y+this.selectHub.height-15)
+			this.ctx.fillText('Atk:  ' + this.selected.attack, this.selectHub.x+20, this.selectHub.y+this.selectHub.height-35)
+			
+			this.ctx.fillStyle = 'green'
+			this.ctx.fillRect(this.selectHub.x+100, this.selectHub.y+this.selectHub.height-30, (this.selected.current_hp/this.selected.hp)*this.selectHub.width-125, 20)
+		}
 	}
 	, calculateVelocity: function() {
 		var new_velocity_x = this.dragon_velocity.x + this.dragon_acceleration.x
@@ -218,12 +278,44 @@ module.exports = React.createClass({
 		this.dragon_acceleration.x = e.velocityX
 		this.dragon_acceleration.y = e.velocityY
 	}
-	, increaseFriction: function(e) {
+	, showStats: function(obj) {
+		this.selected = obj
+	}
+	, action: function(e) {
+		this.selected = null
+
+		var local_x = this.x+e.center.x-this.width/2
+		  , local_y = this.y+e.center.y-this.height/2
+		
+
+		var obj = this.checkLocation(local_x, local_y)
+
+		if(obj)
+			this.showStats(obj)
+
 		this.friction = this.absolute_friction*this.braking
+	}
+	, checkLocation: function(x, y) {
+		var ret
+		this.props.level.enemies.some(function(enemy) {
+			var top = enemy.y
+			  , bottom = enemy.y+enemy.height
+			  , left = enemy.x
+			  , right = enemy.x+enemy.width
+
+			if(x>left && x<right) {
+				if(y>top && y<bottom) {
+					ret = enemy
+					return
+				}
+			}
+		})
+
+		return ret
 	}
 	, render: function() {
 		return (
-			<Hammer onSwipe={this.accelerateDragon} action={this.increaseFriction}>
+			<Hammer onSwipe={this.accelerateDragon} action={this.action}>
 				<canvas id="canvas"></canvas>
 			</Hammer>
 		)
