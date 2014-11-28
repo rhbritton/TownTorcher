@@ -37,6 +37,9 @@ module.exports = React.createClass({
 
 	  	this.x = parseInt(this.props.level.start.x)
 	  	this.y = parseInt(this.props.level.start.y)
+
+	  	this.prevX = parseInt(this.props.level.start.x)
+	  	this.prevY = parseInt(this.props.level.start.y)
 	  	
 	  	this.background = new Image()
 	  	this.background.src = '/src/static/levels/'+this.props.level.id+'/'+this.props.level.id+'.png'
@@ -53,6 +56,7 @@ module.exports = React.createClass({
 	  		remaining++
 	  		self.props.level.enemies[i].data.img = new Image()
 	  		self.props.level.enemies[i].data.img.src = enemy.img
+	  		self.props.level.enemies[i].data.index = i
 
 	  		self.props.level.enemies[i].current_hp = self.props.level.enemies[i].hp
 
@@ -104,15 +108,18 @@ module.exports = React.createClass({
 	, canvasRender: function() {
 		if(this.unmounting) return
 
-		this.frame++
-
 		window.requestAnimationFrame(this.canvasRender)
+
+		this.frame++
 
 		this.ctx.clearRect(0, 0, this.width, this.height)
 		this.ctx.scale(this.scale, this.scale)
 
 		this.implementFriction()
 		this.calculateVelocity()
+
+		this.prevX = this.x
+		this.prevY = this.y
 
 		this.x = this.x+this.dragon_velocity.x
 		this.y = this.y+this.dragon_velocity.y
@@ -133,14 +140,23 @@ module.exports = React.createClass({
 
 		this.ctx.translate( background_x, background_y )
 
+		
+
 		self.ctx.drawImage(self.background, 0, 0, self.background.naturalWidth, self.background.naturalHeight)
 
+		if(this.selected) {
+			this.ctx.beginPath()
+			this.ctx.rect(this.selected.x, this.selected.y, this.selected.width, this.selected.height)
+			this.ctx.lineWidth = 7
+			this.ctx.strokeStyle = 'yellow'
+			this.ctx.stroke()
+			this.ctx.closePath()
+		}
+
 		self.props.level.enemies.forEach(function(enemy, i) {
-			var enemy_x = enemy.x
-			  , enemy_y = enemy.y
-			  , enemy_height = (enemy.data.img.naturalHeight/enemy.data.img.naturalWidth)*enemy.width
+			var enemy_height = (enemy.data.img.naturalHeight/enemy.data.img.naturalWidth)*enemy.width
 			
-			self.ctx.drawImage(enemy.data.img, enemy_x, enemy_y, enemy.width, enemy_height)
+			self.ctx.drawImage(enemy.data.img, enemy.x, enemy.y, enemy.width, enemy_height)
 	  	})
 		
 		this.ctx.translate( -background_x, -background_y )
@@ -159,7 +175,6 @@ module.exports = React.createClass({
 		self.ctx.restore()
 	}
 	, drawSelected: function() {
-		console.log(this.selected)
 		this.ctx.fillStyle = 'white'
 		this.ctx.fillRect(this.selectHub.x, this.selectHub.y, this.selectHub.width, this.selectHub.height)
 		this.ctx.fillStyle = 'black'
@@ -169,6 +184,8 @@ module.exports = React.createClass({
 
 		this.ctx.font = '15px Calibri'
 		this.ctx.lineWidth = '10'
+
+		this.ctx.fillStyle = 'black'
 		
 		if(this.vertical_view) {
 			this.ctx.fillText(this.selected.current_hp+'/'+this.selected.hp, this.selectHub.x+20, this.selectHub.y+50)
@@ -181,6 +198,18 @@ module.exports = React.createClass({
 			
 			this.ctx.fillStyle = 'green'
 			this.ctx.fillRect(this.selectHub.x+100, this.selectHub.y+this.selectHub.height-30, (this.selected.current_hp/this.selected.hp)*this.selectHub.width-125, 20)
+			
+
+
+			if(this.checkIfSelectedIsInRange()) {
+				this.ctx.fillStyle = 'red'
+				this.ctx.fillRect(this.selectHub.x+this.selectHub.width-105, this.selectHub.y+10, 80, 25)
+				this.ctx.fillStyle = 'white'
+				this.ctx.font = '17px Calibri'
+				this.ctx.lineWidth = '17'
+				this.ctx.fillText('Attack!', this.selectHub.x+this.selectHub.width-90, this.selectHub.y+28)
+			}
+			
 		}
 	}
 	, calculateVelocity: function() {
@@ -282,18 +311,61 @@ module.exports = React.createClass({
 		this.selected = obj
 	}
 	, action: function(e) {
-		this.selected = null
-
 		var local_x = this.x+e.center.x-this.width/2
 		  , local_y = this.y+e.center.y-this.height/2
+		  , obj
+		  , selectHub = this.checkSelectHubClick(e.center.x, e.center.y)
+		  , attack = this.checkAttackClick(e.center.x, e.center.y)
 		
+		if(selectHub) {
+			if(attack) {
+				console.log('attack')
+			}
+		} else {
+			if(Math.abs(this.dragon_velocity.x) == 0 && Math.abs(this.dragon_velocity.y) == 0) {
+				this.selected = null
+			}
 
-		var obj = this.checkLocation(local_x, local_y)
+			obj = this.checkLocation(local_x, local_y)
 
-		if(obj)
-			this.showStats(obj)
+			if(obj)
+				this.showStats(obj)
 
-		this.friction = this.absolute_friction*this.braking
+			this.friction = this.absolute_friction*this.braking
+		}
+	}
+	, checkSelectHubClick: function(x, y) {
+		if(this.selected) {
+			var top = this.selectHub.y
+			  , bottom = this.selectHub.y+this.selectHub.height
+			  , left = this.selectHub.x
+			  , right = this.selectHub.x+this.selectHub.width
+
+			if(x>left && x<right) {
+				if(y>top && y<bottom) {
+					return true
+				}
+			}
+		}
+
+		return false
+	}
+	, checkAttackClick: function(x, y) {
+		if(this.selected) {
+			var top = this.selectHub.y+10
+			  , bottom = this.selectHub.y+10+25
+			  , left = this.selectHub.x+this.selectHub.width-105
+			  , right = this.selectHub.x+this.selectHub.width-105+80
+
+			if(x>left && x<right) {
+				if(y>top && y<bottom) {
+					return true
+				}
+			}
+		}
+
+		return false
+		
 	}
 	, checkLocation: function(x, y) {
 		var ret
@@ -312,6 +384,41 @@ module.exports = React.createClass({
 		})
 
 		return ret
+	}
+	, checkIfSelectedIsInRange: function() {
+		if(this.selected) {
+			if(this.boxContains(
+				  {
+				  	  left: this.x - this.dragon_width/2
+				  	, right: this.x + this.dragon_width/2
+				  	, top: this.y - this.dragon_height/2
+				  	, bottom: this.y + this.dragon_height/2
+				  }
+				, {
+					  left: this.selected.x - this.selected.range
+					, right: this.selected.x + this.selected.width + this.selected.range
+					, top: this.selected.y - this.selected.range
+					, bottom: this.selected.y + this.selected.height + this.selected.range
+				}
+			)) {
+				return true
+			}
+		}
+
+		return false	
+	}
+	, boxContains: function(box1, box2) {
+		if(box1.left <= box2.right) {
+			if(box1.right >= box2.left) {
+				if(box1.top <= box2.bottom) {
+					if(box1.bottom >= box2.top) {
+						return true
+					}
+				}
+			}
+		}
+
+		return false
 	}
 	, render: function() {
 		return (
