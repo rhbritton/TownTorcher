@@ -29,6 +29,7 @@ module.exports = React.createClass({
 	  	this.flap_speed = 30
 	  	this.frame = 0
 	  	this.selected = null
+	  	this.attacking = false
 	  	
 
 	  	this.friction = this.absolute_friction
@@ -310,6 +311,32 @@ module.exports = React.createClass({
 	, showStats: function(obj) {
 		this.selected = obj
 	}
+	, attack: function() {
+		this.dragon_acceleration.x = 0
+		this.dragon_acceleration.y = 0
+		this.dragon_velocity.x = 0
+		this.dragon_velocity.y = 0
+
+		this.attacking = true
+		
+		this.calcAngle(this.x - this.selected.x, this.y - this.selected.y)
+
+	}
+	, calcAngle: function(x_diff, y_diff) {
+		var angle = 0
+
+		if(x_diff > 0 && y_diff > 0) {
+			angle = 315
+		} else if(x_diff > 0 && y_diff < 0) {
+			angle = 225
+		} else if(x_diff < 0 && y_diff < 0) {
+			angle = 135
+		} else if(x_diff < 0 && y_diff > 0) {
+			angle = 45
+		}
+
+		this.angle = ((angle)*Math.PI/180)
+	}
 	, action: function(e) {
 		var local_x = this.x+e.center.x-this.width/2
 		  , local_y = this.y+e.center.y-this.height/2
@@ -319,7 +346,7 @@ module.exports = React.createClass({
 		
 		if(selectHub) {
 			if(attack) {
-				console.log('attack')
+				this.attack()
 			}
 		} else {
 			if(Math.abs(this.dragon_velocity.x) == 0 && Math.abs(this.dragon_velocity.y) == 0) {
