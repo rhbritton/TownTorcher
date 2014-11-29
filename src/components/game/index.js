@@ -21,6 +21,7 @@ module.exports = React.createClass({
 	  	this.dragon_width = 50
 	  	this.dragon_height = 50
 
+	  	this.attack_speed = 1000
 	  	this.max_acceleration = 0.75
 	  	this.terminal_velocity = 2
 	  	this.sensitivity = 10
@@ -28,6 +29,8 @@ module.exports = React.createClass({
 	  	this.braking = 10
 	  	this.flap_speed = 30
 	  	this.frame = 0
+	  	this.prevTime = new Date()
+	  	this.time = new Date()
 	  	this.selected = null
 	  	this.attacking = false
 	  	
@@ -36,21 +39,20 @@ module.exports = React.createClass({
 	  	this.dragon_velocity = { x: 0, y: 0 }
 	  	this.dragon_acceleration = { x: 0, y: 0 }
 
-	  	this.x = parseInt(this.props.level.start.x)
-	  	this.y = parseInt(this.props.level.start.y)
+	  	this.x = this.props.level.start.x
+	  	this.y = this.props.level.start.y
 
-	  	this.prevX = parseInt(this.props.level.start.x)
-	  	this.prevY = parseInt(this.props.level.start.y)
+	  	this.prevX = this.props.level.start.x
+	  	this.prevY = this.props.level.start.y
+
+	  	this.setUpDragonData()
 	  	
 	  	this.background = new Image()
 	  	this.background.src = '/src/static/levels/'+this.props.level.id+'/'+this.props.level.id+'.png'
 
-	  	this.dragon = {
-	  		up: new Image(),
-	  		down: new Image()
-	  	}
-	  	this.dragon.up.src = '/src/static/game/dragon/up.png'
-	  	this.dragon.down.src = '/src/static/game/dragon/down.png'
+	  	
+	  	this.defeated_enemies = []
+
 	  	remaining++
 
 	  	this.props.level.enemies.forEach(function(enemy, i) {
@@ -68,6 +70,7 @@ module.exports = React.createClass({
 		  	}
 	  	})
 
+
 	  	this.background.onload = function() {
 	  		if(!--remaining) {
 	  			window.requestAnimationFrame(self.canvasRender)
@@ -77,6 +80,20 @@ module.exports = React.createClass({
 	  	window.onresize = this.setDimensions.bind(this)
 
 	  	this.setDimensions()
+	}
+	, setUpDragonData: function() {
+		this.dragon = {
+	  		up: new Image(),
+	  		down: new Image()
+	  	}
+	  	this.dragon.up.src = '/src/static/game/dragon/up.png'
+	  	this.dragon.down.src = '/src/static/game/dragon/down.png'
+
+	  	this.dragon.hp = 10
+	  	this.dragon.current_hp = 10
+	  	this.dragon.attack = 1
+	  	this.dragon.exp = 0
+	  	this.dragon.level = this.calcLevel()
 	}
 	, setDimensions: function() {
 		this.width = window.innerWidth
@@ -89,19 +106,14 @@ module.exports = React.createClass({
 	  		, height: 75
 	  		, x: 0
 	  	}
-  		this.vertical_view = this.canvas.height < this.selectHub.height*4
+	  	this.selectHub.y = this.canvas.height - this.selectHub.height
 
-  		
-	  	if(this.vertical_view) {
-	  		this.selectHub = {
-		  		  width: 100
-		  		, height: this.canvas.height
-		  		, x: 0
-		  		, y: 0
-		  	}
-	  	} else {
-	  		this.selectHub.y = this.canvas.height - this.selectHub.height
-		}
+	  	this.dragonHub = {
+	  		  width: this.width
+	  		, height: 75
+	  		, x: 0
+	  		, y: 0
+	  	}
 	}
 	, componentWillUnmount: function() {
 		this.unmounting = true
@@ -112,6 +124,16 @@ module.exports = React.createClass({
 		window.requestAnimationFrame(this.canvasRender)
 
 		this.frame++
+		this.prevTime = this.time
+		this.time = new Date()
+
+		if(this.attacking) {
+			if(this.selected) {
+				this.continueAttack()
+			} else {
+				this.attacking = false
+			}
+		}
 
 		this.ctx.clearRect(0, 0, this.width, this.height)
 		this.ctx.scale(this.scale, this.scale)
@@ -122,15 +144,41 @@ module.exports = React.createClass({
 		this.prevX = this.x
 		this.prevY = this.y
 
-		this.x = this.x+this.dragon_velocity.x
-		this.y = this.y+this.dragon_velocity.y
+		var newX = this.x+this.dragon_velocity.x
+		  , newY = this.y+this.dragon_velocity.y
+		
+		if(newX > 0 && newX < this.background.naturalWidth) this.x = newX
+
+		if(newY > 0 && newY < this.background.naturalHeight) this.y = newY
 
 		this.drawLevel()
 		if(this.selected)
 			this.drawSelected()
 
+		this.drawDragonHub()
+
 		this.ctx.scale(1/this.scale, 1/this.scale)
 		
+	}
+	, drawDragonHub: function() {
+		this.ctx.fillStyle = 'white'
+		this.ctx.fillRect(this.dragonHub.x, this.dragonHub.y, this.dragonHub.width, this.dragonHub.height)
+
+		this.ctx.font = '15px Calibri'
+		this.ctx.lineWidth = '10'
+		this.ctx.fillStyle = 'black'
+
+		this.ctx.fillText('Level:  ' + this.dragon.level, this.dragonHub.x+20, this.dragonHub.y+this.dragonHub.height-55)
+		this.ctx.fillText('Hp:  ' + this.dragon.current_hp+'/'+this.dragon.hp, this.dragonHub.x+20, this.dragonHub.y+this.dragonHub.height-15)
+		this.ctx.fillText('Atk:  ' + this.dragon.attack, this.dragonHub.x+20, this.dragonHub.y+this.dragonHub.height-35)
+		
+		this.ctx.fillStyle = 'blue'
+		var exp_bar = this.calcExpBarPercentage()
+		this.ctx.fillRect(this.dragonHub.x+100, this.dragonHub.y+this.dragonHub.height-40, exp_bar ? exp_bar*this.dragonHub.width-125 : 0, 5)
+		
+		this.ctx.fillStyle = 'green'
+		this.ctx.fillRect(this.dragonHub.x+100, this.dragonHub.y+this.dragonHub.height-30, (this.dragon.current_hp/this.dragon.hp)*this.selectHub.width-125, 20)
+			
 	}
 	, drawLevel: function() {
 		var self = this
@@ -141,24 +189,36 @@ module.exports = React.createClass({
 
 		this.ctx.translate( background_x, background_y )
 
-		
-
 		self.ctx.drawImage(self.background, 0, 0, self.background.naturalWidth, self.background.naturalHeight)
 
-		if(this.selected) {
-			this.ctx.beginPath()
-			this.ctx.rect(this.selected.x, this.selected.y, this.selected.width, this.selected.height)
-			this.ctx.lineWidth = 7
-			this.ctx.strokeStyle = 'yellow'
-			this.ctx.stroke()
-			this.ctx.closePath()
-		}
-
 		self.props.level.enemies.forEach(function(enemy, i) {
-			var enemy_height = (enemy.data.img.naturalHeight/enemy.data.img.naturalWidth)*enemy.width
-			
-			self.ctx.drawImage(enemy.data.img, enemy.x, enemy.y, enemy.width, enemy_height)
+			if(enemy.current_hp > 0) {
+				var enemy_height = (enemy.data.img.naturalHeight/enemy.data.img.naturalWidth)*enemy.width
+				self.ctx.drawImage(enemy.data.img, enemy.x, enemy.y, enemy.width, enemy_height)
+
+				if(self.selected && self.selected.data.index == i) {
+					drawEnemyArrow(enemy, 4, 5)
+				} else {
+					drawEnemyArrow(enemy, 2, 10)
+				}
+				self.ctx.drawImage(enemy.data.img, enemy.x, enemy.y, enemy.width, enemy_height)
+			}
 	  	})
+
+	  	function drawEnemyArrow(enemy, line_width, y) {
+	  		var start_point = { x: enemy.x+enemy.width/2 - 10, y: enemy.y-y-10 }
+
+	  		self.ctx.beginPath()
+	  		self.ctx.lineWidth = line_width
+			self.ctx.strokeStyle = 'yellow'
+
+	  		self.ctx.moveTo(start_point.x, start_point.y)
+	  		self.ctx.lineTo(start_point.x+10, start_point.y+10)
+	  		self.ctx.lineTo(start_point.x+20, start_point.y)
+
+			self.ctx.stroke()
+	  		self.ctx.closePath()
+	  	}
 		
 		this.ctx.translate( -background_x, -background_y )
 
@@ -185,32 +245,27 @@ module.exports = React.createClass({
 
 		this.ctx.font = '15px Calibri'
 		this.ctx.lineWidth = '10'
-
 		this.ctx.fillStyle = 'black'
 		
-		if(this.vertical_view) {
-			this.ctx.fillText(this.selected.current_hp+'/'+this.selected.hp, this.selectHub.x+20, this.selectHub.y+50)
-			
-			this.ctx.fillStyle = 'green'
-			this.ctx.fillRect(this.selectHub.x+20, this.selectHub.y+60, 20, (this.selected.current_hp/this.selected.hp)*this.selectHub.height-75)
-		} else {
-			this.ctx.fillText('Hp:  ' + this.selected.current_hp+'/'+this.selected.hp, this.selectHub.x+20, this.selectHub.y+this.selectHub.height-15)
-			this.ctx.fillText('Atk:  ' + this.selected.attack, this.selectHub.x+20, this.selectHub.y+this.selectHub.height-35)
-			
-			this.ctx.fillStyle = 'green'
-			this.ctx.fillRect(this.selectHub.x+100, this.selectHub.y+this.selectHub.height-30, (this.selected.current_hp/this.selected.hp)*this.selectHub.width-125, 20)
-			
 
+		this.ctx.fillText('Hp:  ' + this.selected.current_hp+'/'+this.selected.hp, this.selectHub.x+20, this.selectHub.y+this.selectHub.height-15)
+		this.ctx.fillText('Atk:  ' + this.selected.attack, this.selectHub.x+20, this.selectHub.y+this.selectHub.height-35)
+		
+		this.ctx.fillStyle = 'green'
+		this.ctx.fillRect(this.selectHub.x+100, this.selectHub.y+this.selectHub.height-30, (this.selected.current_hp/this.selected.hp)*this.selectHub.width-125, 20)
+		
 
-			if(this.checkIfSelectedIsInRange()) {
+		if(this.checkIfSelectedIsInRange()) {
+			if(this.attacking) {
+				this.ctx.fillStyle = 'blue'
+			} else {
 				this.ctx.fillStyle = 'red'
-				this.ctx.fillRect(this.selectHub.x+this.selectHub.width-105, this.selectHub.y+10, 80, 25)
-				this.ctx.fillStyle = 'white'
-				this.ctx.font = '17px Calibri'
-				this.ctx.lineWidth = '17'
-				this.ctx.fillText('Attack!', this.selectHub.x+this.selectHub.width-90, this.selectHub.y+28)
 			}
-			
+			this.ctx.fillRect(this.selectHub.x+this.selectHub.width-105, this.selectHub.y+10, 80, 25)
+			this.ctx.fillStyle = 'white'
+			this.ctx.font = '17px Calibri'
+			this.ctx.lineWidth = '17'
+			this.ctx.fillText('Attack!', this.selectHub.x+this.selectHub.width-90, this.selectHub.y+28)
 		}
 	}
 	, calculateVelocity: function() {
@@ -279,6 +334,8 @@ module.exports = React.createClass({
 		  , dragon_y = this.height/2-(this.dragon_height/2)
 		  , radians = (e.angle+90)*Math.PI/180
 
+		this.attacking = false
+
 		this.angle = radians
 		this.friction = this.absolute_friction
 
@@ -322,6 +379,49 @@ module.exports = React.createClass({
 		this.calcAngle(this.x - this.selected.x, this.y - this.selected.y)
 
 	}
+	, calcLevel: function() {
+		var level = Math.floor(Math.sqrt(this.dragon.exp))
+
+		if(level <= 0) level = 1
+
+		return level
+	}
+	, calcExp: function(level) {
+		var exp = Math.pow(level, 2)
+		if(level <= 1) exp = 0
+
+		return exp
+	}
+	, calcExpBarPercentage: function() {
+		return (this.dragon.exp - this.calcExp(this.dragon.level))/(this.calcExp(this.dragon.level+1) - this.calcExp(this.dragon.level))
+	}
+	, continueAttack: function() {
+		if(!this.lastAttackTime) this.lastAttackTime = new Date()
+
+		if(this.time - this.lastAttackTime >= this.attack_speed) {
+			this.lastAttackTime = this.time			
+
+			if(this.dragon.current_hp <= 1) {
+				this.dragon.current_hp = 0
+				this.attacking = 0
+				// Dragon Dies
+			} else {
+				this.dragon.current_hp--
+
+				if(this.selected.current_hp <= 1) {
+					this.dragon.exp += this.selected.attack*this.selected.hp
+					var level = this.calcLevel()
+					if(this.dragon.level != level) this.dragon.current_hp = this.dragon.hp
+					this.dragon.level = level
+					this.selected.current_hp = 0
+					this.attacking = 0
+					this.selected = null
+				} else {
+					this.selected.current_hp--
+				}
+			}
+		}
+	}
 	, calcAngle: function(x_diff, y_diff) {
 		var angle = 0
 
@@ -349,6 +449,8 @@ module.exports = React.createClass({
 				this.attack()
 			}
 		} else {
+			this.attacking = false
+
 			if(Math.abs(this.dragon_velocity.x) == 0 && Math.abs(this.dragon_velocity.y) == 0) {
 				this.selected = null
 			}
@@ -397,15 +499,17 @@ module.exports = React.createClass({
 	, checkLocation: function(x, y) {
 		var ret
 		this.props.level.enemies.some(function(enemy) {
-			var top = enemy.y
-			  , bottom = enemy.y+enemy.height
-			  , left = enemy.x
-			  , right = enemy.x+enemy.width
+			if(enemy.current_hp > 0) {
+				var top = enemy.y
+				  , bottom = enemy.y+enemy.height
+				  , left = enemy.x
+				  , right = enemy.x+enemy.width
 
-			if(x>left && x<right) {
-				if(y>top && y<bottom) {
-					ret = enemy
-					return
+				if(x>left && x<right) {
+					if(y>top && y<bottom) {
+						ret = enemy
+						return
+					}
 				}
 			}
 		})

@@ -4,20 +4,451 @@
 		, "name": "Lonely Farmlands I"
 		, "stage": "Lonely Farmlands"
 		, "start": {
-			  "x": "500"
-			, "y": "500"
+			  "x": 500
+			, "y": 500
 		}
 		, "enemies": [
-			{
-				  "id": "1"
-				, "name": "Lonely Farmer"
+			  {
+				  "name": "Lonely Farmer"
 				, "x": 200
 				, "y": 200
 				, "width": 55
 				, "height": 60
 				, "img": "/src/static/game/enemies/farmer/farmer.png"
-				, "attack": "1"
-				, "hp": "2"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 300
+				, "y": 300
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 300
+				, "y": 400
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 300
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 400
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 500
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 600
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
+				, "range": 60
+				, "data": {}
+			}
+			, {
+				  "name": "Lonely Farmer"
+				, "x": 400
+				, "y": 700
+				, "width": 55
+				, "height": 60
+				, "img": "/src/static/game/enemies/farmer/farmer.png"
+				, "attack": 1
+				, "hp": 2
 				, "range": 60
 				, "data": {}
 			}
@@ -28,8 +459,8 @@
 		, "name": "Lonely Farmlands II"
 		, "stage": "Lonely Farmlands"
 		, "start": {
-			  "x": "100"
-			, "y": "50"
+			  "x": 100
+			, "y": 50
 		}
 		, "enemies": []
 	}
