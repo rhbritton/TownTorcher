@@ -25,7 +25,7 @@ Render.render = function() {
 	if(this.selected)
 		drawSelected.bind(this)()
 
-	//drawDragonHub.bind(this)()
+	drawDragonHub.bind(this)()
 
 	this.ctx.scale(1/this.scale, 1/this.scale)
 }
@@ -79,12 +79,14 @@ function drawWorld() {
 	self.ctx.translate(-self.dragon.position.current.x, -self.dragon.position.current.y)
 	
 	self.ctx.drawImage(self.background.img, 0, 0, self.background.img.naturalWidth, self.background.img.naturalHeight)
+
+	this.ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'
 	self.props.level.enemies.forEach(function(enemy, i) {
 		if(enemy.current_hp > 0) {
 			var enemy_height = (enemy.data.img.naturalHeight/enemy.data.img.naturalWidth)*enemy.width
-			self.ctx.drawImage(enemy.data.img, enemy.x, enemy.y, enemy.width, enemy_height)
 
 			if(self.selected && self.selected.data.index == i) {
+				self.ctx.fillRect(enemy.x - enemy.range, enemy.y - enemy.range, enemy.width + enemy.range*2, enemy.height + enemy.range*2)
 				drawEnemyArrow.bind(self)(enemy, 4, 5)
 			} else {
 				drawEnemyArrow.bind(self)(enemy, 2, 10)
@@ -139,8 +141,7 @@ function drawSelected() {
 	this.ctx.fillStyle = 'green'
 	this.ctx.fillRect(this.selectHub.x+100, this.selectHub.y+this.selectHub.height-30, (this.selected.current_hp/this.selected.hp)*this.selectHub.width-125, 20)
 	
-
-	if(Attack.objectInRange.bind(this)) {
+	if(Attack.objectInRange.bind(this)()) {
 		if(this.attacking) {
 			this.ctx.fillStyle = 'blue'
 		} else {

@@ -1,13 +1,17 @@
 var Move = module.exports
 
 Move.dragon = function(x, y) {
+	this.dragon.position.destination.x = x
+	this.dragon.position.destination.y = y
 
-	this.dragon.position.previous.x = this.dragon.position.current.x
-	this.dragon.position.previous.y = this.dragon.position.current.y
+	if(Move.canMoveThere.bind(this)()) {
+		this.dragon.position.previous.x = this.dragon.position.current.x
+		this.dragon.position.previous.y = this.dragon.position.current.y
 
-	this.dragon.position.current.x = x
-	this.dragon.position.current.y = y
-
+		this.dragon.position.current.x = x
+		this.dragon.position.current.y = y
+	}
+	
 	// calculate new position given Point this.dragon.position.destination, Vector this.dragon.velocity, Point this.dragon.position.current
 	
 
@@ -28,6 +32,14 @@ Move.dragon = function(x, y) {
 
 	// this.last_time = new Date()
 	// this.velocity
+}
+
+Move.canMoveThere = function() {
+	if(this.dragon.position.destination.x > 0 && this.dragon.position.destination.x < this.background.width) {
+		if(this.dragon.position.destination.y > 0 && this.dragon.position.destination.y < this.background.height) {
+			return true
+		}
+	}
 }
 
 Move.boxContains = function(box1, box2) {

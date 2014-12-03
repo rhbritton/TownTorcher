@@ -26,6 +26,7 @@ Setup.init = function() {
 function setUpDragonData() {
 	this.dragon = {
   		  angle: 0 // degrees
+      , range: 50 // pixels
   		, width: 50 // pixels
   		, height: 50 // pixels
   		, terminal_velocity: 2 // px/s
@@ -59,7 +60,7 @@ function setUpDragonData() {
   		, exp: 0
   	}
 	
-	this.dragon.level = User.calcLevel.bind(this)()
+	   this.dragon.level = User.calcLevel.bind(this)()
   	this.dragon.state.up.src = '/src/static/game/dragon/up.png'
   	this.dragon.state.down.src = '/src/static/game/dragon/down.png'
 }
@@ -90,6 +91,8 @@ function buildEnvironment() {
   	})
 
   	self.background.img.onload = function() {
+      self.background.width = self.background.img.naturalWidth
+      self.background.height = self.background.img.naturalHeight
   		if(!--loading_images) {
   			window.requestAnimationFrame(Render.render.bind(self))
   		}

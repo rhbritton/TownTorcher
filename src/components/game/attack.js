@@ -1,4 +1,5 @@
 var Attack = module.exports
+  , Move = require('./move')
 
 Attack.enemy = function() {
 	this.dragon_acceleration.x = 0
@@ -13,18 +14,18 @@ Attack.enemy = function() {
 
 Attack.objectInRange = function() {
 	if(this.selected) {
-		if(this.boxContains(
+		if(Move.boxContains(
 			  {
-			  	  left: this.x - this.dragon_width/2
-			  	, right: this.x + this.dragon_width/2
-			  	, top: this.y - this.dragon_height/2
-			  	, bottom: this.y + this.dragon_height/2
+			  	  left: this.dragon.position.current.x
+			  	, right: this.dragon.position.current.x
+			  	, top: this.dragon.position.current.y
+			  	, bottom: this.dragon.position.current.y
 			  }
 			, {
-				  left: this.selected.x - this.selected.range
-				, right: this.selected.x + this.selected.width + this.selected.range
-				, top: this.selected.y - this.selected.range
-				, bottom: this.selected.y + this.selected.height + this.selected.range
+				  left: this.selected.x - this.dragon.range
+				, right: this.selected.x + this.selected.width/2 + this.dragon.range
+				, top: this.selected.y - this.dragon.range
+				, bottom: this.selected.y + this.selected.height/2 + this.dragon.range
 			}
 		)) {
 			return true

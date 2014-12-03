@@ -33,7 +33,7 @@ module.exports = React.createClass({
 		} else {
 			this.attacking = false
 			
-
+			
 			Move.dragon.bind(this)(local_x, local_y)
 		}
 	}
