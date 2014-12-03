@@ -21,80 +21,32 @@
 				, "data": {}
 			}
 			, {
-				  "name": "Lonely Farmer"
-				, "x": 300
-				, "y": 300
-				, "width": 55
-				, "height": 60
-				, "img": "/src/static/game/enemies/farmer/farmer.png"
-				, "attack": 1
-				, "hp": 2
-				, "range": 60
-				, "data": {}
-			}
-			, {
-				  "name": "Lonely Farmer"
-				, "x": 300
-				, "y": 400
-				, "width": 55
-				, "height": 60
-				, "img": "/src/static/game/enemies/farmer/farmer.png"
-				, "attack": 1
-				, "hp": 2
-				, "range": 60
-				, "data": {}
-			}
-			, {
-				  "name": "Lonely Farmer"
-				, "x": 400
-				, "y": 300
-				, "width": 55
-				, "height": 60
-				, "img": "/src/static/game/enemies/farmer/farmer.png"
-				, "attack": 1
-				, "hp": 2
-				, "range": 60
-				, "data": {}
-			}
-			, {
-				  "name": "Lonely Farmer"
-				, "x": 400
-				, "y": 400
-				, "width": 55
-				, "height": 60
-				, "img": "/src/static/game/enemies/farmer/farmer.png"
-				, "attack": 1
-				, "hp": 2
-				, "range": 60
-				, "data": {}
-			}
-			, {
-				  "name": "Lonely Farmer"
-				, "x": 400
-				, "y": 500
-				, "width": 55
-				, "height": 60
-				, "img": "/src/static/game/enemies/farmer/farmer.png"
-				, "attack": 1
-				, "hp": 2
-				, "range": 60
-				, "data": {}
-			}
-			, {
-				  "name": "Lonely Farmer"
-				, "x": 400
+				  "name": "Lonely Cow"
+				, "x": 350
 				, "y": 600
-				, "width": 55
-				, "height": 60
-				, "img": "/src/static/game/enemies/farmer/farmer.png"
-				, "attack": 1
+				, "width": 30
+				, "height": 30
+				, "img": "/src/static/game/enemies/cow/cow.png"
+				, "attack": 0
 				, "hp": 2
-				, "range": 60
+				, "range": 0
+				, "data": {}
+			}
+			, {
+				  "name": "Farm"
+				, "x": 700
+				, "y": 50
+				, "width": 200
+				, "height": 200
+				, "img": "/src/static/game/enemies/farm/farm.png"
+				, "attack": 0
+				, "hp": 10
+				, "range": 0
 				, "data": {}
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -106,7 +58,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -118,7 +70,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -130,7 +82,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -142,7 +94,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -154,7 +106,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -166,7 +118,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -178,7 +130,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -190,7 +142,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -202,7 +154,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -214,7 +166,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -226,7 +178,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -238,7 +190,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -250,7 +202,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -262,7 +214,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -274,7 +226,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -286,7 +238,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -298,7 +250,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -310,7 +262,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -322,7 +274,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -334,7 +286,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -346,7 +298,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -358,7 +310,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -370,7 +322,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -382,7 +334,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -394,7 +346,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -406,7 +358,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -418,7 +370,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -430,7 +382,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60
@@ -442,7 +394,7 @@
 			}
 			, {
 				  "name": "Lonely Farmer"
-				, "x": 400
+				, "x": 300
 				, "y": 700
 				, "width": 55
 				, "height": 60

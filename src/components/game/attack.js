@@ -14,18 +14,21 @@ Attack.enemy = function() {
 
 Attack.objectInRange = function() {
 	if(this.selected) {
+		console.log(this.dragon.position.current.x + this.dragon.width + this.dragon.range)
+		console.log(this.selected.x)
+			
 		if(Move.boxContains(
 			  {
-			  	  left: this.dragon.position.current.x
-			  	, right: this.dragon.position.current.x
-			  	, top: this.dragon.position.current.y
-			  	, bottom: this.dragon.position.current.y
+			  	  left: this.dragon.position.current.x - this.dragon.width/2 - this.dragon.range
+			  	, right: this.dragon.position.current.x + this.dragon.width/2 + this.dragon.range
+			  	, top: this.dragon.position.current.y  - this.dragon.height/2 - this.dragon.range
+			  	, bottom: this.dragon.position.current.y + this.dragon.height/2 + this.dragon.range
 			  }
 			, {
-				  left: this.selected.x - this.dragon.range
-				, right: this.selected.x + this.selected.width/2 + this.dragon.range
-				, top: this.selected.y - this.dragon.range
-				, bottom: this.selected.y + this.selected.height/2 + this.dragon.range
+				  left: this.selected.x
+				, right: this.selected.x + this.selected.width
+				, top: this.selected.y
+				, bottom: this.selected.y + this.selected.height
 			}
 		)) {
 			return true
