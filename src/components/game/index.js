@@ -24,7 +24,7 @@ module.exports = React.createClass({
 		  , obj = Tap.onObject.bind(this)(local_x, local_y)
 		
 		if(Tap.onSelectHub.bind(this)(e.center.x, e.center.y)) {
-			if(attack) Attack.enemy.bind(this)()
+			if(Tap.onAttack.bind(this)(e.center.x, e.center.y)) Attack.enemy.bind(this)()
 		} else if(obj) {
 			// select object
 			this.selected = obj
@@ -33,7 +33,7 @@ module.exports = React.createClass({
 		} else {
 			this.attacking = false
 			
-			
+
 			Move.dragon.bind(this)(local_x, local_y)
 		}
 	}

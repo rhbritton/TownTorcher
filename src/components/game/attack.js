@@ -2,30 +2,25 @@ var Attack = module.exports
   , Move = require('./move')
 
 Attack.enemy = function() {
-	this.dragon_acceleration.x = 0
-	this.dragon_acceleration.y = 0
-	this.dragon_velocity.x = 0
-	this.dragon_velocity.y = 0
-
 	this.attacking = true
 	
-	faceObject(this.x - this.selected.x, this.y - this.selected.y)
+	faceObject(this.dragon.position.current.x - this.selected.x, this.dragon.position.current.y - this.selected.y)
 }
 
 Attack.objectInRange = function() {
 	if(this.selected) {
 		if(Move.boxContains(
 			  {
-			  	  left: this.dragon.position.current.x
-			  	, right: this.dragon.position.current.x
-			  	, top: this.dragon.position.current.y
-			  	, bottom: this.dragon.position.current.y
+			  	  left: this.dragon.position.current.x - this.dragon.range
+			  	, right: this.dragon.position.current.x + this.dragon.range
+			  	, top: this.dragon.position.current.y - this.dragon.range
+			  	, bottom: this.dragon.position.current.y + this.dragon.range
 			  }
 			, {
-				  left: this.selected.x - this.dragon.range
-				, right: this.selected.x + this.selected.width/2 + this.dragon.range
-				, top: this.selected.y - this.dragon.range
-				, bottom: this.selected.y + this.selected.height/2 + this.dragon.range
+				  left: this.selected.x + this.selected.width/2
+				, right: this.selected.x + this.selected.width/2
+				, top: this.selected.y + this.selected.height/2
+				, bottom: this.selected.y + this.selected.height/2
 			}
 		)) {
 			return true

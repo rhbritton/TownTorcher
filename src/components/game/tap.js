@@ -1,4 +1,5 @@
 var Tap = module.exports
+  , Attack = require('./attack')
 
 Tap.onSelectHub = function(x, y) {
 	if(this.selected) {
@@ -18,7 +19,7 @@ Tap.onSelectHub = function(x, y) {
 }
 
 Tap.onAttack = function(x, y) {
-	if(this.selected) {
+	if(this.selected && Attack.objectInRange.bind(this)()) {
 		var top = this.selectHub.y+10
 		  , bottom = this.selectHub.y+10+25
 		  , left = this.selectHub.x+this.selectHub.width-105
