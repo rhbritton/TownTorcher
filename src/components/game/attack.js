@@ -11,16 +11,16 @@ Attack.objectInRange = function() {
 	if(this.selected) {
 		if(Move.boxContains(
 			  {
-			  	  left: this.dragon.position.current.x - this.dragon.range
-			  	, right: this.dragon.position.current.x + this.dragon.range
-			  	, top: this.dragon.position.current.y - this.dragon.range
-			  	, bottom: this.dragon.position.current.y + this.dragon.range
+			  	  left: this.dragon.position.current.x - this.dragon.width/2 - this.dragon.range
+			  	, right: this.dragon.position.current.x + this.dragon.width/2 + this.dragon.range
+			  	, top: this.dragon.position.current.y  - this.dragon.height/2 - this.dragon.range
+			  	, bottom: this.dragon.position.current.y + this.dragon.height/2 + this.dragon.range
 			  }
 			, {
-				  left: this.selected.x + this.selected.width/2
-				, right: this.selected.x + this.selected.width/2
-				, top: this.selected.y + this.selected.height/2
-				, bottom: this.selected.y + this.selected.height/2
+				  left: this.selected.x
+				, right: this.selected.x + this.selected.width
+				, top: this.selected.y
+				, bottom: this.selected.y + this.selected.height
 			}
 		)) {
 			return true
